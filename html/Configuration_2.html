@@ -1,0 +1,219 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Configuration_2</title><meta name="generator" content="MATLAB 9.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-11-10"><meta name="DC.source" content="Configuration_2.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1></h1><!--introduction--><p><b>Obstacle Avoidance</b></p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Define/Create Start, Finish, &amp; Obstacles</a></li><li><a href="#2">Path Plan</a></li><li><a href="#3">Plot Path and Obstacles</a></li></ul></div><h2 id="1">Define/Create Start, Finish, &amp; Obstacles</h2><pre class="codeinput">clear <span class="string">all</span> <span class="comment">%#ok&lt;*CLALL&gt;</span>
+close <span class="string">all</span>
+<span class="comment">%Path Start (XYZ)</span>
+<span class="comment">%path_start = [5 5 5];</span>
+path_start = [3 2 3];
+
+<span class="comment">%Path End (XYZ)</span>
+<span class="comment">%path_end = [1 1 5];</span>
+path_end = [0 1 1];
+
+<span class="comment">%straight line path</span>
+path_straight = [path_start; path_end];
+
+<span class="comment">%potential fields params</span>
+z = 1; <span class="comment">%attractions coefficient</span>
+n = 1; <span class="comment">%repulsion coefficient</span>
+p0 = 2; <span class="comment">%effective radius</span>
+
+<span class="comment">%planner params</span>
+step_size = 0.01;
+converg_size = 0.03;
+
+<span class="comment">%Define spherical obstacles with radius (r), and centres at obs_locs</span>
+<span class="comment">%(XYZ)</span>
+r = 1;
+[sphere_x, sphere_y, sphere_z] = sphere();
+obs_locs = [
+    3 1 2;
+    2 3 2;
+    3 3 5;
+    ];
+</pre><h2 id="2">Path Plan</h2><pre class="codeinput">cur_q = ikin(path_start);
+end_q = ikin(path_end);
+
+cur_pos = fkin(cur_q);
+end_pos = fkin(end_q);
+
+path = squeeze(cur_pos(3,1:3,4));
+
+<span class="comment">%for k = 1:1000</span>
+<span class="keyword">while</span> norm(path_end-cur_pos(3,1:3,4),2)&gt;converg_size
+    t = zeros(1,3);
+    <span class="comment">%calculate torques per joint</span>
+    <span class="keyword">for</span> i = 1:size(cur_pos,1)
+        <span class="comment">%add attraction to goal</span>
+        cur_t = (jacob(cur_q,i)'*calcAtt(squeeze(cur_pos(i,:,:)),squeeze(end_pos(i,:,:)), z))';
+        t = t + cur_t;
+
+        <span class="comment">%add rep to obs</span>
+        <span class="keyword">for</span> j = 1:size(obs_locs,1)
+           cur_t = (jacob(cur_q,i)'*calcRep(squeeze(cur_pos(i,:,:)),obs_locs(j,:),n,r, p0))';
+           t = t + cur_t;
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    step = step_size*t/norm(t,2);
+    cur_q = cur_q + step;
+    cur_pos = fkin(cur_q);
+
+    path = vertcat(path, squeeze(cur_pos(3,1:3,4)));
+    squeeze(cur_pos(3,1:3,4));
+<span class="keyword">end</span>
+</pre><h2 id="3">Plot Path and Obstacles</h2><pre class="codeinput">figure
+plot3(path(:,1), path(:,2), path(:,3));
+hold <span class="string">on</span>
+plot3(path_straight(:,1), path_straight(:,2), path_straight(:,3));
+grid <span class="string">on</span>
+<span class="keyword">for</span> i = 1:size(obs_locs,1)
+    surf(sphere_x*r + obs_locs(i,1), sphere_y*r + obs_locs(i,2), sphere_z*r + obs_locs(i,3))
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="Configuration_2_01.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2017b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%%
+% *Obstacle Avoidance*
+
+%% Define/Create Start, Finish, & Obstacles
+clear all %#ok<*CLALL>
+close all
+%Path Start (XYZ)
+%path_start = [5 5 5];
+path_start = [3 2 3];
+
+%Path End (XYZ)
+%path_end = [1 1 5];
+path_end = [0 1 1];
+
+%straight line path
+path_straight = [path_start; path_end];
+
+%potential fields params
+z = 1; %attractions coefficient
+n = 1; %repulsion coefficient
+p0 = 2; %effective radius
+
+%planner params
+step_size = 0.01;
+converg_size = 0.03;
+
+%Define spherical obstacles with radius (r), and centres at obs_locs
+%(XYZ)
+r = 1;
+[sphere_x, sphere_y, sphere_z] = sphere();
+obs_locs = [
+    3 1 2;
+    2 3 2;
+    3 3 5;
+    ];
+%% Path Plan
+cur_q = ikin(path_start);
+end_q = ikin(path_end);
+
+cur_pos = fkin(cur_q);
+end_pos = fkin(end_q);
+
+path = squeeze(cur_pos(3,1:3,4));
+
+%for k = 1:1000
+while norm(path_end-cur_pos(3,1:3,4),2)>converg_size
+    t = zeros(1,3);
+    %calculate torques per joint
+    for i = 1:size(cur_pos,1)
+        %add attraction to goal
+        cur_t = (jacob(cur_q,i)'*calcAtt(squeeze(cur_pos(i,:,:)),squeeze(end_pos(i,:,:)), z))';
+        t = t + cur_t;
+        
+        %add rep to obs
+        for j = 1:size(obs_locs,1)
+           cur_t = (jacob(cur_q,i)'*calcRep(squeeze(cur_pos(i,:,:)),obs_locs(j,:),n,r, p0))';
+           t = t + cur_t;
+        end
+    end
+    step = step_size*t/norm(t,2);
+    cur_q = cur_q + step;
+    cur_pos = fkin(cur_q);
+    
+    path = vertcat(path, squeeze(cur_pos(3,1:3,4)));
+    squeeze(cur_pos(3,1:3,4));
+end
+
+
+
+%% Plot Path and Obstacles
+figure
+plot3(path(:,1), path(:,2), path(:,3));
+hold on
+plot3(path_straight(:,1), path_straight(:,2), path_straight(:,3));
+grid on
+for i = 1:size(obs_locs,1)
+    surf(sphere_x*r + obs_locs(i,1), sphere_y*r + obs_locs(i,2), sphere_z*r + obs_locs(i,3))
+end
+##### SOURCE END #####
+--></body></html>
